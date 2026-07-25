@@ -6,15 +6,6 @@ permalink: /blog/
 ---
 
 <section class="section">
-  <header class="page-header page-header--wide">
-    <p class="eyebrow">Blog</p>
-    <h1>Notes from the workbench.</h1>
-    <p class="page-header__lede">
-      Shorter writing on interpretability, experiment design, technical ideas,
-      and research in progress.
-    </p>
-  </header>
-
   {% assign published_posts = site.posts | where_exp: "post", "post.published != false" %}
   {% if published_posts.size > 0 %}
     <div class="post-list post-list--page">

@@ -1,6 +1,6 @@
 ---
 layout: research
-title: "J-Lens awareness is response-order dependent"
+title: "When (and when not) LLMs verbalize awareness of J-Space concept injections - Initial Results"
 browser_title: "When (and when not) LLMs verbalize awareness of J-Space concept injections-Initial Results"
 description: "A controlled activation-intervention study finds that Qwen’s exact reports of injected concepts depend sharply on whether reflection comes before or after its task answer."
 date: 2026-07-24
@@ -349,18 +349,7 @@ Other relevant experiments/tests could include:
 
 ## Reproducibility notes
 
-The frozen configurations used for the three task-then-report arms are:
-
-- [`configs/qwen3.6-27b-explicit-facts-calibration.yaml`](./configs/qwen3.6-27b-explicit-facts-calibration.yaml)
-- [`configs/qwen3.6-27b-explicit-facts-workspace-first-half.yaml`](./configs/qwen3.6-27b-explicit-facts-workspace-first-half.yaml)
-- [`configs/qwen3.6-27b-explicit-facts-workspace-second-half.yaml`](./configs/qwen3.6-27b-explicit-facts-workspace-second-half.yaml)
-
-The reversed-order arms use the corresponding six arm-by-relation configurations with `reverse` in their filenames. Aggregated, condition-level records and figures are in:
-
-- [`artifacts/qwen3.6-27b-facts-half-workspace-comparison/`](./artifacts/qwen3.6-27b-facts-half-workspace-comparison/)
-- [`artifacts/qwen3.6-27b-facts-reverse-workspace-comparison/`](./artifacts/qwen3.6-27b-facts-reverse-workspace-comparison/)
-
-Before public release I intend to add a compact data dictionary, a single command that regenerates the summary tables and figures from frozen scored rows, hardware/runtime metadata, and a public repository URL.
+Reproducibility notes and a full public repository are soon forthcoming.
 
 ## References
 
