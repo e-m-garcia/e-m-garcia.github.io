@@ -1,0 +1,31 @@
+---
+layout: default
+---
+
+<article class="research-article">
+  <header class="article-header">
+    <a class="back-link" href="{{ '/research/' | relative_url }}"><span aria-hidden="true">←</span> Research</a>
+    <div class="meta-row">
+      <span class="tag">{{ page.topic }}</span>
+      <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%B %Y" }}</time>
+    </div>
+    <h1>{{ page.title }}</h1>
+    {% if page.description %}<p class="article-header__lede">{{ page.description }}</p>{% endif %}
+    <div class="article-byline">
+      <span class="article-byline__mark" aria-hidden="true">EG</span>
+      <span>By Ethan Garcia · Independent research</span>
+    </div>
+  </header>
+
+  <div class="article-rule" aria-hidden="true"></div>
+
+  <div class="article-grid">
+    <aside class="article-aside">
+      <p class="eyebrow">In brief</p>
+      <p>Response order changes whether Qwen reports an injected concept, but barely changes whether that concept steers its answer.</p>
+    </aside>
+    <div class="prose prose--article">
+      {{ content }}
+    </div>
+  </div>
+</article>

@@ -1,4 +1,12 @@
-# When (and when not) LLMs verbalize awareness of J-Space concept injections - Initial Results
+---
+layout: research
+title: "J-Lens awareness is response-order dependent"
+description: "A controlled activation-intervention study finds that Qwen’s exact reports of injected concepts depend sharply on whether reflection comes before or after its task answer."
+date: 2026-07-24
+topic: Mechanistic interpretability
+math: true
+permalink: /research/j-lens-awareness/
+---
 
 ## Summary
 
@@ -239,7 +247,7 @@ There were also zero instances of an exact target report without steering in the
 
 ### Task then report
 
-![Task-then-report outcomes over integrated injection strength](./images/task_then_report_fig.png)
+![Task-then-report outcomes over integrated injection strength]({{ '/images/task_then_report_fig.png' | relative_url }})
 
 In the normal order, target reports rose with steering over portions of the strength sweep. Related targets were generally easier to steer than unrelated targets for all injection bands. The first-half interventions were behaviorally stronger than the second-half interventions at matched injection strengths.
 
@@ -257,7 +265,7 @@ The model's factual answer is wrong and exactly matches the injection. But becau
 
 ### Report then task
 
-![Report-then-task outcomes over integrated injection strength](./images/report_then_task_fig.png)
+![Report-then-task outcomes over integrated injection strength]({{ '/images/report_then_task_fig.png' | relative_url }})
 
 With the fields reversed, exact target reports disappear even where behavioral steering remains strong. On the same Egypt item, same target, same full-band layers, and same \(\alpha=0.060\), the output was:
 

@@ -1,25 +1,11 @@
 ---
 permalink: /404.html
 layout: page
+title: Page not found
 ---
 
-<style type="text/css" media="screen">
-  .container {
-    margin: 10px auto;
-    max-width: 600px;
-    text-align: center;
-  }
-  h1 {
-    margin: 30px 0;
-    font-size: 4em;
-    line-height: 1;
-    letter-spacing: -1px;
-  }
-</style>
-
-<div class="container">
-  <h1>404</h1>
-
-  <p><strong>Page not found :(</strong></p>
-  <p>The requested page could not be found.</p>
+<div class="empty-state">
+  <p class="empty-state__mark" aria-hidden="true">404</p>
+  <h2>This page wandered out of distribution.</h2>
+  <p>Try the <a href="{{ '/' | relative_url }}">home page</a>, <a href="{{ '/research/' | relative_url }}">research</a>, or <a href="{{ '/blog/' | relative_url }}">blog</a>.</p>
 </div>

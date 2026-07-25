@@ -1,0 +1,44 @@
+---
+layout: default
+title: Research
+description: Research notes and experimental results in AI interpretability.
+permalink: /research/
+---
+
+<section class="section">
+  <header class="page-header page-header--wide">
+    <p class="eyebrow">Research</p>
+    <h1>Experiments on model internals.</h1>
+    <p class="page-header__lede">
+      Independent work on mechanistic interpretability, activation interventions,
+      and the gap between model behavior and model reports.
+    </p>
+  </header>
+
+  <div class="research-list">
+    <article class="research-item">
+      <div class="research-item__number">01</div>
+      <div class="research-item__main">
+        <div class="meta-row">
+          <span class="tag">Mechanistic interpretability</span>
+          <time datetime="2026-07-24">July 2026</time>
+        </div>
+        <h2><a href="{{ '/research/j-lens-awareness/' | relative_url }}">J-Lens awareness is response-order dependent</a></h2>
+        <p>
+          I inject single-token Jacobian Lens vectors into Qwen 3.6–27B and test
+          whether changing the order of “answer” and “report” changes the model’s
+          stated detection of an intervention.
+        </p>
+        <ul class="finding-list">
+          <li><strong>3,120</strong> positive-strength trials across both response orders</li>
+          <li><strong>322 → 0</strong> exact reports when the report moves before the answer</li>
+          <li><strong>450 vs. 454</strong> steered answers—nearly unchanged by order</li>
+        </ul>
+        <a class="text-link" href="{{ '/research/j-lens-awareness/' | relative_url }}">Read the full write-up <span aria-hidden="true">→</span></a>
+      </div>
+      <a class="research-item__figure" href="{{ '/research/j-lens-awareness/' | relative_url }}" tabindex="-1" aria-hidden="true">
+        <img src="{{ '/images/report_then_task_fig.png' | relative_url }}" alt="">
+      </a>
+    </article>
+  </div>
+</section>

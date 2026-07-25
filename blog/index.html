@@ -1,0 +1,36 @@
+---
+layout: default
+title: Blog
+description: Notes on AI interpretability, experiments, and independent research.
+permalink: /blog/
+---
+
+<section class="section">
+  <header class="page-header page-header--wide">
+    <p class="eyebrow">Blog</p>
+    <h1>Notes from the workbench.</h1>
+    <p class="page-header__lede">
+      Shorter writing on interpretability, experiment design, technical ideas,
+      and research in progress.
+    </p>
+  </header>
+
+  {% assign published_posts = site.posts | where_exp: "post", "post.published != false" %}
+  {% if published_posts.size > 0 %}
+    <div class="post-list post-list--page">
+      {% for post in published_posts %}
+        <article class="post-row">
+          <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%b %-d, %Y" }}</time>
+          <h2><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h2>
+          <p>{{ post.excerpt | strip_html | truncatewords: 30 }}</p>
+        </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty-state">
+      <p class="empty-state__mark" aria-hidden="true">✦</p>
+      <h2>The first note is still being written.</h2>
+      <p>Research results will continue to appear under <a href="{{ '/research/' | relative_url }}">Research</a>; shorter observations will collect here soon.</p>
+    </div>
+  {% endif %}
+</section>

@@ -20,10 +20,11 @@
 
 title: Ethan Garcia
 email: emgarcia@alumni.caltech.edu
-description: >- # this means to ignore newlines until "baseurl:"
-  Ethan Garcia is a physics-educated independent researcher in AI interpretability.
-baseurl: "" # the subpath of your site, e.g. /blog
-url: https://e-m-garcia.github.io # the base hostname & protocol for your site, e.g. http://example.com
+description: >-
+  Ethan Garcia is a physics-trained independent researcher studying AI interpretability,
+  model internals, and the foundations of neural network behavior.
+baseurl: ""
+url: https://e-m-garcia.github.io
 twitter_username: emg_sirkit
 github_username: e-m-garcia
 
@@ -31,6 +32,25 @@ github_username: e-m-garcia
 theme: minima
 plugins:
   - jekyll-feed
+
+markdown: kramdown
+kramdown:
+  input: GFM
+  math_engine: mathjax
+  syntax_highlighter: rouge
+
+permalink: /blog/:year/:month/:day/:title/
+
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: page
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: post
 
 # Exclude from processing.
 # The following items will not be processed, by default.
