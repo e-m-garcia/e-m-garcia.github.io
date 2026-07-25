@@ -145,7 +145,7 @@ The complete task and target mapping is in [Appendix A](#appendix-a-complete-tas
 
 ### Intervention
 
-For target token \(q\), layer \(\ell\), selected task-token position \(t\), and nominal strength \(\alpha\), I added
+For target token $q$, layer $\ell$, selected task-token position $t$, and nominal strength $\alpha$, I added
 
 $$
 h_{\ell,t}
@@ -158,9 +158,9 @@ $$
 
 Here:
 
-- \(v_{q,\ell}\) is the target's layer-specific J-lens vector;
-- \(r_\ell\) is the median L2 norm of the clean residual vectors at the selected task positions in that layer;
-- \(m_B\) is a layer-band multiplier: 1 for the full band and 2 for either half-band arm.
+- $v_{q,\ell}$ is the target's layer-specific J-lens vector;
+- $r_\ell$ is the median L2 norm of the clean residual vectors at the selected task positions in that layer;
+- $m_B$ is a layer-band multiplier: 1 for the full band and 2 for either half-band arm.
 
 The intervention was installed after each selected transformer block and affected every tokenizer position belonging to the literal factual-task message. It did **not** affect the instruction message, the assistant's `Understood.`, chat-template or role tokens outside the literal task span, or any generated token. Hooks were active only during prompt prefill, not during cached autoregressive generation.
 
@@ -176,9 +176,9 @@ $$
 
 | Arm | Layers | Number of layers | Per-layer multiplier | Nominal integrated coefficient |
 |---|---:|---:|---:|---:|
-| Full band | 24–57 | 34 | 1 | \(34\alpha\) |
-| First half | 24–40 | 17 | 2 | \(34\alpha\) |
-| Second half | 41–57 | 17 | 2 | \(34\alpha\) |
+| Full band | 24–57 | 34 | 1 | $34\alpha$ |
+| First half | 24–40 | 17 | 2 | $34\alpha$ |
+| Second half | 41–57 | 17 | 2 | $34\alpha$ |
 
 Doubling the half-band coefficient matches the simple sum of per-layer coefficients. Considering the fact that interventions were performed over half the layers, this was decided so that the downstream effect could be compensated. However, this is just a heuristic, so a direct comparisons should not be made between the half-band arms and the full-band arms. Nevertheless, we can still make conclusions comparing the first half and second half arms since the same injection strengths were performed in both.
 
@@ -252,7 +252,7 @@ There were also zero instances of an exact target report without steering in the
 
 In the normal order, target reports rose with steering over portions of the strength sweep. Related targets were generally easier to steer than unrelated targets for all injection bands. The first-half interventions were behaviorally stronger than the second-half interventions at matched injection strengths.
 
-As an example, on the Egypt item with related target *Athens*, the full-band intervention at \(\alpha=0.060\) produced:
+As an example, on the Egypt item with related target *Athens*, the full-band intervention at $\alpha=0.060$ produced:
 
 ```json
 {
@@ -268,7 +268,7 @@ The model's factual answer is wrong and exactly matches the injection. But becau
 
 ![Report-then-task outcomes over integrated injection strength]({{ '/images/report_then_task_fig.png' | relative_url }})
 
-With the fields reversed, exact target reports disappear even where behavioral steering remains strong. On the same Egypt item, same target, same full-band layers, and same \(\alpha=0.060\), the output was:
+With the fields reversed, exact target reports disappear even where behavioral steering remains strong. On the same Egypt item, same target, same full-band layers, and same $\alpha=0.060$, the output was:
 
 ```json
 {
