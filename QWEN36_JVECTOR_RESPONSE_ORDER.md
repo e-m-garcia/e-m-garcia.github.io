@@ -22,13 +22,15 @@ Across 1,560 positive-strength concept-injections in each order, the injected co
 
 Equally importantly, in the task-then-report condition there were **no occurrences of the model reporting an injected concept while maintaining a correct answer**: all 322 exact reports of verbalized injection awarenss co-occurred where the task answer was also the injected target. When report came first, the model still gave the injected target as its later task answer 454 times, but never named that target in the earlier report.
 
+For responses where steering in the answer was observed, there was a higher incidence rate of intervention awareness for unrelated injected concepts compared to related injected concepts.
+
 The data also shows that injections were much more effective in steering when performed in the 1st half of the estimated workspace band layers compared to the 2nd half (going from a **<10%** non-steered response rate to a **>70%** rate, respectively, past a certain injection strength threshold).
 
-**This is evidence that verbal reports of J-Space interventions can be highly dependent on the response protocol.** One natural explanation is autoregressive self-conditioning: When the answer field comes first, the later report on injection occurrence can condition on the model's own already-generated, steered answer. Since an LLM is a function from tokens to tokens, it stands to reason that an LLM can only verbalize awareness of a modification to its activations if the model output can attend to tokens that contain information indicative of a modification. However, this experiment cannot firmly establish that the autoregressive self-conditioning hypothesis is the primary explanation of the results presented; further work is required.
+**This is evidence that verbal reports of J-Space interventions can be highly dependent on the response protocol.** One natural explanation is autoregressive self-conditioning: When the answer field comes first, the later report on injection occurrence can condition on the model's own already-generated, steered answer. Since an LLM is a function from tokens to tokens, it stands to reason that an LLM can only verbalize awareness of a modification to its activations if the model output can attend to tokens that contain information indicative of a modification. However, this experiment cannot firmly establish that the autoregressive self-conditioning hypothesis is the primary explanation of the results presented; further work, such as a detailed analysis of the token logits themselves, is required.
 
 ## Experimental motivation and question
 
-[*Verbalizable Representations Form a Global Workspace in Language Models*][anthropic-paper] from a research group at Anthropic introduced the notion of an LLM's J-Space via conclusions drawn from a tool, Jacobian Lens. Jacobian Lens, or J-Lens, can probe/modify activations via a map to tokens in the model's vocabulary. I will not discuss all the technical detials of J-Lens here. However, I have a forthcoming piece that motivates J-Lens as the context/position-averaged first-order perturbative term in an LLM's final-layer residual stream from deviations in an earlier layer's residual stream, which will be linked here. Therefore, in a particular scope, there is an argument that J-Lens is the most immediate, mathematically justifiable tool for layer-specific model interpretability, giving J-Lens a very solid mathematical foundation in addition to the emprirical justifications given in *Verbalizable Representations*.
+[*Verbalizable Representations Form a Global Workspace in Language Models*][anthropic-paper] from a research group at Anthropic introduced the notion of an LLM's J-Space via conclusions drawn from a tool, Jacobian Lens. Jacobian Lens, or J-Lens, can probe/modify activations via a map to tokens in the model's vocabulary. I will not discuss all the technical detials of J-Lens here. However, I have a piece that motivates J-Lens as the context/position-averaged first-order perturbative term in an LLM's final-layer residual stream from deviations in an earlier layer's residual stream, [which is linked here][e-m-garcia.github.io/blog/2026/07/27/why-jacobian-lens-is-very-natural-for-model-interpretability/]. Therefore, in a particular scope, there is an argument that J-Lens is the most immediate, mathematically justifiable tool for layer-specific model interpretability, giving J-Lens a very solid mathematical foundation in addition to the emprirical justifications given in *Verbalizable Representations*.
 
 For now, however, all we need to know is that a tensor can be composed from an averaged Jacobian tensor and the final unembedding weights, providing a map between all possible vocabulary tokens $q$ and corresponding residual stream vectors $v$ for any intermediate layer in an LLM $\ell$. This mapping provides residual stream vectors that, at least loosely speaking, point in a direction with increasing evidence for outputting a token $q$. So, if we look at this tensor and restrict our attention to a particular choice of vocabulary token, we can read out the corresponding residual stream vector that correlates with it for any layer. This vector is what Anthropic calls a "J-Lens vector".
 
@@ -264,6 +266,16 @@ As an example, on the Egypt item with related target *Athens*, the full-band int
 
 The model's factual answer is wrong and exactly matches the injection. But because the answer token occurs first, the later report also has direct textual access to the word *Athens* in its own generation history. This could've allowed the model to realize that an injection occurred and to successfully identify the concept.
 
+Another observation from the data that is easily overlooked is that, given a response had its answer steered, unrelated concepts were more likely to correlate with verbalized awareness than related concepts. Explicitly (referring to the tabulated data in Appendix B), we have the following ratios of responses with verbalized awareness over total responses with steered answers; or in other words, "awareness + steering" / ("awareness + steering" + "silent steering").
+
+| Band        | Related      | Unrelated    |
+| ----------- | ------------ | ------------ |
+| Full        | 90/113 = 80% | 44/48 = 92%  |
+| First half  | 76/139 = 55% | 69/107 = 64% |
+| Second half | 34/34 = 100% | 9/9 = 100%   |
+
+This pattern can also be identified in the prior charts by the slower rise and quantity of "silent steering" responses compared to "awareness + steering" reports for unrelated tasks compared to related tasks.
+
 ### Report then task
 
 ![Report-then-task outcomes over integrated injection strength]({{ '/images/report_then_task_fig.png' | relative_url }})
@@ -299,15 +311,17 @@ The order manipulation also supports an autoregressive self-conditioning explana
 
 Three observations make this explanation salient:
 
-- Every report-then-answer response that detected an injected concept co-occurred with a steered answer;
-- Reversing the field order removed every exact report of an injected concept;
-- Reversing the field order left aggregate steering in the answer almost unchanged.
+- Every response that detected an injected concept (all of which were from the answer-then-report arm) co-occurred with a steered answer;
+- The report-then-answer arm never recorded a response that included verbalized awarenes of a injected concept;
+- Aggregate steering in the answer was nevertheless almost unchanged between both arms of the experiment.
 
-Again, this makes sense given that an LLM is a function from tokens to tokens: An LLM can only verbalize awareness of a modification to its activations if the model output can attend to tokens that contain information indicative of that modification. There are many other experimental protocols one can pursue to refine this interpretation, which I describe in the next section. I comment that this may not necessarily hold for a model that can also attend to its own activations directly, which could, at least hypothetically, allow the model to more immediately and generally become "aware" of this sort of intervention. 
+Again, this makes sense given that an LLM is a function from tokens to tokens: An LLM may only verbalize awareness of a modification to its activations if the model output can attend to tokens that contain information indicative of that modification. I comment that this may not necessarily hold for a model that can also attend to its own activations directly, which could, at least hypothetically, allow the model to more immediately and generally become "aware" of this sort of intervention.
+
+However, we should note that the data is not yet fully conclusive on matter such as why the model outputs exactly zero responses with intervention awareness for the report-then-answer arm, so any potential hypothesis like the one presented above should be cautioned. It could still be possible that the model's logits (either at the output layer or using J-Lens at the final workspace layer) relevant for intervention awareness still increase with $\alpha$ in the report-then-answer arm. However, these logits never overcome the "default" answer, unlike the answer-then-report arm, resulting in zero relevant outputs when ran at zero temperature. It is clear that **reading the token logits relevant to intervention awareness along with their sensitivities to intervention strengths and conditions is the most important and logical next step for follow-up experiments.**
 
 I now turn to the interpreting the observed differences between earlier and later workspace layer interventions.
 
-First, an averaged-Jacobian perturbation analysis does **not** by itself predict that an equal-norm injection must have a larger effect at an earlier layer. A Jacobian rigorously maps a small perturbation at a particular layer to its first-order downstream effect; those maps differ across layers, and nothing requires their relevant gains to increase with remaining depth. I may describe this in more detail in my forthcoming justification and explanation of J-Lens.
+First, an averaged-Jacobian perturbation analysis does **not** by itself predict that an equal-norm injection must have a larger effect at an earlier layer. A Jacobian rigorously maps a small perturbation at a particular layer to its first-order downstream effect; those maps differ across layers, and nothing requires their relevant gains to increase with remaining depth. I may describe this in more detail in a later post.
 
 However, note that *Verbalizable Representations* highlights some observed differences between early and late workspace layers, particularly the experiment conducted in A.14. There, the researchers demonstrate that ablation of a concept in later workspace layers inhibits naming of the specific ablated concept but not other concepts in a similar category. On the contrary, ablation of a concept in earlier layers does not notably inhibit naming of that concept but does inhibit naming related concepts.
 
@@ -340,10 +354,10 @@ The most informative immediate follow-ups could include:
 - First measuring the workspace band of the model explicitly before performing interventions, such as by first identifying where J-vectors are most similar between layers using Centered Kernel Alignment
 - Non-zero temperature runs.
 
-Other relevant experiments/tests could include:
+Other relevant experiments/tests could include (**bolded** items indicate experiments I plan to conduct most immediately):
 
-* Similar experimental protocols over more subjects, including subjects pertaining to cyber and biological risks;
-* Measuring workspace-layer J-lens readouts from upstream J-vector interventions; for example, measuring how a target concept and related concepts' logits at the final workspace layer change from interventions at earlier layer positions;
+* **Similar protocols over more subject matter, including subjects pertaining to cyber and biological risks;**
+* **Measuring workspace-layer J-lens readouts in the current experimental configuration and other upstream J-vector interventions; for example, measuring how a target concept and related concepts' logits at the final workspace layer change from interventions at earlier layer positions;**
 * Experiments with multiple interventions, such as an ablation and an injection of the same concept in different respective layers;
 * Centroid analysis: First construct a centroid J-vector for a particular concept by averaging the J-vectors for many related concepts (e.g., all cities in Europe). Then, construct residual J-vectors between the related concepts and the centroids. Trace the norms of the residual vectors against norms of the centroid vectors; the ratio of the two may change notably between early and late workspace layers.
 
