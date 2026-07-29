@@ -2,12 +2,13 @@
 layout: default
 ---
 
-<article class="research-article">
+<article class="research-article research-article--research">
   <header class="article-header">
     <a class="back-link" href="{{ '/research/' | relative_url }}"><span aria-hidden="true">←</span> Research</a>
     <div class="meta-row">
       <span class="tag">{{ page.topic }}</span>
-      <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%B %Y" }}</time>
+      <time datetime="{{ page.date | date_to_xmlschema }}">Published {{ page.date | date: "%B %-d, %Y" }}</time>
+      {% if page.updated %}<time datetime="{{ page.updated | date_to_xmlschema }}">Updated {{ page.updated | date: "%B %-d, %Y" }}</time>{% endif %}
     </div>
     <h1>{{ page.title }}</h1>
     {% if page.description %}<p class="article-header__lede">{{ page.description }}</p>{% endif %}
@@ -20,9 +21,9 @@ layout: default
   <div class="article-rule" aria-hidden="true"></div>
 
   <div class="article-grid">
-    <aside class="article-aside">
-      <p class="eyebrow">In brief</p>
-      <p>Response order changes whether Qwen reports an injected concept, but barely changes whether that concept steers its answer.</p>
+    <aside class="article-toc" aria-label="On this page">
+      <p class="article-toc__label">Contents</p>
+      <nav data-article-toc aria-label="Research article sections"></nav>
     </aside>
     <div class="prose prose--article">
       {{ content }}
