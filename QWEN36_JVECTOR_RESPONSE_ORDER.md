@@ -4,13 +4,15 @@ title: "When (and when not) LLMs verbalize awareness of J-Space concept injectio
 browser_title: "When (and when not) LLMs verbalize awareness of J-Space concept injections - Initial Results"
 description: "A controlled activation-intervention study finds that Qwen’s exact reports of injected concepts depend sharply on whether reflection comes before or after its task answer."
 date: 2026-07-24
-updated: 2026-07-29
+updated: 2026-08-03
 topic: Mechanistic interpretability
 math: true
 permalink: /research/j-lens-awareness/
 ---
 
 ## Summary
+
+*Update (08/03/2026): Code for reproduction and cross-model extensions [now available here](https://github.com/e-m-garcia/j-lens-verbalized-awareness)!*
 
 I injected single-token Jacobian Lens vectors into Qwen 3.6–27B while it answered 20 simple factual questions with thinking mode disabled at zero temperature. The injected concept was either a wrong but task-related answer (for example, *Athens* while asking for the capital of Egypt) or a wholly unrelated concept. Injections were performed at several strengths over three layer-band categories: the full estimated workspace band, its first half, or its second half.
 
@@ -27,7 +29,7 @@ For responses where steering in the answer was observed, exact reports were more
 
 The injections were also much more effective at steering when applied over the first half of the estimated workspace band than over the second half.
 
-The retained output logits sharpen this picture. In the report-then-task arm, the injected concept remained tens of thousands of vocabulary ranks from first in the report field and never approached anywhere near plausibly verbalizable logit values for any response. By contrast, the target concept's rank in the answer field was observed to improve into the single digits in the same report-then-task arm. When the task answer came first instead, the injected concept rank in the report field improved by several additional orders of magnitude to verbalizable levels.
+The retained output logits sharpen this picture. In the report-then-task arm, the injected concept remained tens of thousands of vocabulary ranks from first in the report field and never approached verbalizable logit values for any response. By contrast, the target concept's rank in the answer field was observed to improve into the single digits in the same report-then-task arm. When the task answer came first instead, the injected concept rank in the report field improved by several additional orders of magnitude to verbalizable levels.
 
 **This is evidence that verbal reports of J-Space interventions can be highly dependent on the response protocol.** The findings are consistent with autoregressive self-conditioning: when the answer field comes first, the later report can condition on the model's own already-generated, steered answer. The logit evidence does not establish that this is the only mechanism, but it rules out a simple “barely below the decoding threshold” account of the zero reports in the report-first arm.
 
@@ -426,7 +428,7 @@ Other relevant experiments/tests could include:
 
 ## Reproducibility notes
 
-Reproducibility notes and a full public repository are soon forthcoming.
+[This repository](https://github.com/e-m-garcia/j-lens-verbalized-awareness) contains instructions and code for both exact replication of the results discussed here as well as cross-model extensions of the existing experimental protocol.
 
 ## References
 
