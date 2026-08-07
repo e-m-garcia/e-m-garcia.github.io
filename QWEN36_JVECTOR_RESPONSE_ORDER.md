@@ -4,7 +4,7 @@ title: "When (and when not) LLMs verbalize awareness of J-Space concept injectio
 browser_title: "When (and when not) LLMs verbalize awareness of J-Space concept injections - Initial Results"
 description: "A controlled activation-intervention study finds that Qwen’s exact reports of injected concepts depend sharply on whether reflection comes before or after its task answer."
 date: 2026-07-24
-updated: 2026-08-06
+updated: 2026-08-07
 topic: Mechanistic interpretability
 math: true
 permalink: /research/j-lens-awareness/
@@ -14,17 +14,15 @@ permalink: /research/j-lens-awareness/
 
 *Update (08/03/2026): Code for reproduction and cross-model extensions [now available here](https://github.com/e-m-garcia/j-lens-verbalized-awareness)!*
 
-I have already conducted an experiment with white-box techniques where model self-reports on interventions on its own activations change significantly under a protocol change, so I will put down my existing summary of that experiment and propose possible extensions to it, which is mostly unmodified from my existing description.
-
 In the experiment, I injected single-token Jacobian Lens (J-Lens) vectors into Qwen 3.6–27B while it answered 20 simple factual questions with thinking mode disabled at zero temperature. The injected concept was either a wrong but task-related answer (for example, Athens while asking for the capital of Egypt) or a wholly unrelated concept. Injections were performed at several strengths over three layer-band categories: the full estimated workspace band, its first half, or its second half.
 
-The principal manipulation was the order of two fields in the model’s response:
+I conducted two experimental arms switching the order of two fields in the model’s response:
 
 * Task then report: first give the response, then report whether an injected concept was detected.
 
 * Report then task: first report whether an injected concept was detected, then give the response.
 
-Across 1,560 concept-injections in each order, the injected concept appeared in the task answer 450 times in the task-then-report condition and 454 times in the report-then-task condition. This supports the conclusion that both orders were similarly successful in steering the model to the target, incorrect answer.
+Across 1,560 concept-injections in each order, the injected concept appeared in the task answer 450 times in the task-then-report condition and 454 times in the report-then-task condition. This supports the conclusion that both orders were similarly successful in steering the model to the targeted, incorrect answer.
 
 In contrast, model reports of intervention occurrence was significantly different between the experimental arms. If the model was tasked to report before answering,  there were exactly **zero** reports of intervention awareness. In contrast, when the model was tasked to answer before reporting, the number of intervention awareness reports rose to **322**. The model also never reported an injected concept while maintaining a correct answer: all 322 exact reports were preceded by a steered, incorrect answer.
 
@@ -34,7 +32,7 @@ The injections were also much more effective at steering when applied over the f
 
 The retained output logits sharpened this picture. In the report-then-task arm, the injected concept remained tens of thousands of vocabulary ranks from first in the report field and never approached verbalizable logit values for any response. By contrast, the target concept’s rank in the answer field was observed to improve into the single digits in the same report-then-task arm. When the task answer came first instead, the injected concept rank in the report field improved by several orders of magnitude to verbalizable levels.
 
-**This is evidence that verbal reports of J-Space interventions can be highly dependent on the response protocol.** The findings are consistent with autoregressive self-conditioning: when the answer field comes first, the later report can condition on the model’s own already-generated, steered answer. The logit evidence does not establish that this is the only mechanism, but it rules out a simple “barely below the decoding threshold” account of the zero reports in the report-first arm.
+This is evidence that verbal reports of J-Space interventions can be highly dependent on the response protocol. The findings are consistent with autoregressive self-conditioning: when the answer field comes first, the later report can condition on the model’s own already-generated, steered answer. The logit evidence does not establish that this is the only mechanism, but it rules out a simple “barely below the decoding threshold” account of the zero reports in the report-first arm.
 
 ## Experimental motivation and question
 
