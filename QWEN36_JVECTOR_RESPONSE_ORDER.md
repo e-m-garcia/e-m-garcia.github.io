@@ -32,13 +32,13 @@ The injections were also much more effective at steering when applied over the f
 
 The output logits sharpened the emerging picture significantly. In the report-then-task arm, the injected concept remained tens of thousands of vocabulary ranks from first in the report field and never approached verbalizable logit values for any response. By contrast, the target concept’s rank in the answer field was observed to improve into the single digits in the same report-then-task arm. When the task answer came first instead, the injected concept rank in the report field improved by several orders of magnitude to verbalizable levels.
 
-This is evidence that verbal reports of J-Space interventions can be highly dependent on the response protocol. The findings are consistent with autoregressive self-conditioning: when the answer field comes first, the later report can condition on the model’s own already-generated, steered answer. The logit evidence does not firmly establish that this is the only possible mechanism, but it rules out a simple “barely below the decoding threshold” alternative explanation for the zero intervention reports in the report-first arm.
+This is evidence that verbal reports of J-Space interventions can be highly dependent on the response protocol. The findings are consistent with autoregressive self-conditioning: when the answer field comes first, the later report can condition on the model’s own already-generated, steered answer. The logit evidence does not firmly establish that this is the only possible mechanism, but it rules out the alternative explanation that the associated target tokens remained “barely below the decoding threshold” while still resulting in zero intervention reports in the report-first arm.
 
 ## Experimental motivation and question
 
-[*Verbalizable Representations Form a Global Workspace in Language Models*][anthropic-paper] from researchers at Anthropic introduced the notion of an LLM's J-Space via conclusions drawn from, Jacobian Lens, or J-Lens, a tool that can probe or modify activations via a mapping to tokens in the model's vocabulary. I will not discuss all the technical details of J-Lens here. However, I have a piece that motivates J-Lens as the context/position-averaged first-order perturbative term in an LLM's final-layer residual stream from deviations in an earlier layer's residual stream, [which is linked here](https://e-m-garcia.github.io/blog/2026/07/27/understanding-the-origin-of-the-j-space/). Therefore, in a particular scope, there is an argument that J-Lens is the most immediate, mathematically justifiable tool for layer-specific model interpretability, giving it a solid mathematical foundation in addition to the empirical justifications given in *Verbalizable Representations*.
+[*Verbalizable Representations Form a Global Workspace in Language Models*][anthropic-paper] from researchers at Anthropic introduced the notion of an LLM's J-Space via conclusions drawn from, Jacobian Lens, or J-Lens, a tool that can probe or modify activations via a mapping to tokens in the model's vocabulary. J-Lens can be motivated as as the context/position-averaged first-order perturbative term in an LLM's final-layer residual stream from deviations in an earlier layer's residual stream, [which I describe in further detail here](https://e-m-garcia.github.io/blog/2026/07/27/understanding-the-origin-of-the-j-space/). Therefore, in a particular scope, there is an argument that J-Lens is the most immediate, mathematically justifiable tool for layer-specific model interpretability, giving it a solid mathematical foundation in addition to the empirical justifications given in *Verbalizable Representations*.
 
-For now, however, all we need to know is that a tensor can be composed from an averaged Jacobian tensor and the final unembedding weights, providing a map between all possible vocabulary tokens $q$ and corresponding residual stream vectors $v$ for any intermediate layer in an LLM $\ell$. This mapping provides residual stream vectors that, at least loosely speaking, point in a direction with increasing evidence for outputting a token $q$. So, if we look at this tensor and restrict our attention to a particular choice of vocabulary token, we can read out the corresponding residual stream vector that correlates with it for any layer. This vector is what Anthropic calls a "J-Lens vector".
+A tensor can be composed from an averaged Jacobian tensor and the final unembedding weights, providing a map between all possible vocabulary tokens $q$ and corresponding residual stream vectors $v$ for any intermediate layer in an LLM $\ell$. This mapping provides residual stream vectors that, at least loosely speaking, point in a direction with increasing evidence for outputting a token $q$. So, if we look at this tensor and restrict our attention to a particular choice of vocabulary token, we can read out the corresponding residual stream vector that correlates with it for any layer. This vector is what Anthropic calls a "J-Lens vector".
 
 One basic intervention that can be performed is residual-stream steering:
 $$
@@ -58,7 +58,7 @@ Assistant: Yes, I detect an injected thought. The thought is about the word "
 
 The tokens on the second "Human" line are where the researchers performed the J-vector injection. The model could correctly identify the injected concept successfully given sufficient injection strength by completing the open quotation mark.
 
-However, I was not quite convinced that models could reliably and naturally identify injected J-space concepts from this example alone. It appears that the researchers prefilled the model with the response "Yes, I detect an injected thought..." before generation, which could bias the model to report. This is fine for the purpose of demonstrating that a model can report on an injection at all, but it raises an additional question: would the model continue to report the injected concept if the prompt did not include the final "Assistant" line?
+However, this did not quite convince me that language models could reliably and naturally identify injected J-space concepts. It appeared that the researchers prefilled the model with the response "Yes, I detect an injected thought..." before generation, which could bias the model to report. This is fine for the purpose of demonstrating that a model can report on an injection at all, but it raises an additional question: would the model continue to report the injected concept if the prompt did not include the final "Assistant" line?
 
 Furthermore, there were other experiments in the paper that cast further doubt on the ability for a model to naturally recognize a J-vector intervention. For example, in Section 3.3, there are multiple examples of the model giving incorrect answers to factual questions when J-vector swaps were performed. In all these examples, there isn't clear evidence that the model "recognized" something wrong.
 
@@ -95,7 +95,7 @@ The considerations above provided the backbone for the following experiments des
 | Residual width | 5,120 |
 | Available source layers | 0–62 |
 
-Although the frozen configuration retains a sampling-temperature field used elsewhere in the experiment runner, calibration sweeps were executed deterministically at temperature 0. The values above describe the effective run, not merely the nominal configuration.
+Although the frozen configuration retains a sampling-temperature field used elsewhere in the experiment runner, calibration sweeps were executed deterministically at temperature 0.
 
 ### Conversation protocols
 
@@ -188,7 +188,7 @@ $$
 | First half | 24–40 | 17 | 2 | $34\alpha$ |
 | Second half | 41–57 | 17 | 2 | $34\alpha$ |
 
-Doubling the half-band coefficient matches the simple sum of per-layer coefficients. Since these interventions covered half as many layers, I used this multiplier as a heuristic compensation for their downstream effect. Direct comparisons between a half-band arm and the full-band arm should therefore be treated cautiously. The first- and second-half arms are more directly comparable because both used the same injection strengths.
+Doubling the half-band coefficient matches the simple sum of per-layer coefficients. Since these interventions covered half as many layers, I used this multiplier as a heuristic compensation for their downstream effect. Direct comparisons between a half-band arm and the full-band arm should therefore be treated cautiously. The first and second-half arms are more directly comparable because both used the same injection strengths.
 
 ### Conditions and controls
 
@@ -204,7 +204,7 @@ $$
 
 rows per response order, or 3,120 rows across both orders.
 
-Control coverage was asymmetric:
+Control coverage was as follows:
 
 - For the task-then-report full-band run, I collected 520 random-direction controls matched over tasks, relations, and positive strengths, plus 40 zero-strength controls. Every one retained the correct factual answer; none produced an exact target report, target answer, nonspecific change report, or malformed response.
 - For the report-then-task full-band run, I collected 40 matched zero-strength controls. They likewise produced no target report, target answer, change report, or malformed response.
@@ -216,7 +216,7 @@ Responses were parsed as JSON and required to contain exactly three keys. `task_
 
 Target and expected-answer matches were case-insensitive, punctuation-normalized exact token matches rather than substring matches. Rows were shuffled and scored without intervention-condition labels before the sealed condition key was joined back in. The scoring itself was deterministic and automated.
 
-I use behavioral labels throughout:
+I use these behavioral labels throughout:
 
 | Label in this post | Operational definition |
 |---|---|
@@ -243,7 +243,7 @@ $$
 
 where $z_v$ is the raw next-token logit for vocabulary token $v$. Rank 1 therefore means that the injected token was the model's highest-logit continuation at that position.
 
-The analysis below uses the injected target's logit and rank at `detected_concept` and `task_answer` for all 3,120 positive-strength target-vector trials. For each response order, matched full-band zero trials provide the $\alpha=0$ reference. As in the outcome figures, I reuse the order-specific zero baseline in the first-half and second-half panels because those arms did not have separate zero controls. Each point is the median across the same 20 factual items, with the interquartile range shaded. The rank axis is logarithmic and inverted so that upward movement means improvement toward rank 1.
+The analysis below uses the injected target's logit and rank at `detected_concept` and `task_answer` for all 3,120 positive-strength target-vector trials. For each response order, matched full-band zero trials provide the $\alpha=0$ reference. I reuse the order-specific zero baseline in the first-half and second-half panels because those arms did not have separate zero controls. Each point is the median across the same 20 factual items, with the interquartile range shaded. The rank axis is logarithmic and inverted so that upward movement means improvement toward rank 1.
 
 I also computed within-item target-logit changes,
 
@@ -251,15 +251,13 @@ $$
 \Delta z_q(\alpha)=z_q(\alpha)-z_q(0),
 $$
 
-which are more interpretable than comparing absolute logits across different vocabulary tokens. Two malformed task-then-report, first-half unrelated responses at $\alpha=0.065$ and $0.070$ never reached `detected_concept`; those two measurements remain missing rather than being imputed.
-
-These are **output-logit** measurements retained from the original runs, not J-Lens readouts of generated-token residual activations. The saved records contain the source and target token measurements, not full vocabulary distributions or field-position activations. The target-token rank is therefore a token-specific diagnostic rather than a concept-marginalized probability.
+which are more interpretable than comparing absolute logits across different vocabulary tokens.
 
 ## Results
 
 ### The response-order result
 
-The following table aggregates all 13 positive strengths. Each cell contains a count and percentage out of 260 rows (20 tasks × 13 strengths). These are repeated measurements over the same 20 items, so the percentages are descriptive and should not be treated as 260 independent observations.
+The following table aggregates all 13 positive strengths. Each cell contains a count and percentage out of 260 rows (20 tasks × 13 strengths).
 
 | Layer band | Target | Task→report: target answer | Task→report: exact target report | Report→task: target answer | Report→task: exact target report |
 |---|---|---:|---:|---:|---:|
@@ -329,7 +327,7 @@ Under the simple integrated-coefficient matching used here, the first-half arm p
 - Task then report: 246 first-half target answers versus 43 second-half target answers;
 - Report then task: 257 first-half target answers versus 35 second-half target answers.
 
-The defensible conclusion is empirical: for this model, task set, normalization, target construction, and layer ranges, injections over layers 24–40 were substantially more effective than budget-matched injections over layers 41–57.
+The defensible conclusion is empirical: for this model, task set, normalization, target construction, and layer ranges, injections over layers 24–40 were substantially more effective than injections over layers 41–57.
 
 It is also notable that the task-then-report configuration had no silently steered responses under second-half injections: every steered response also contained an exact target report. This contrasts with the first-half and full-band injections, which produced some silently steered responses.
 
@@ -369,9 +367,9 @@ The `detected_concept` comparison is qualitatively different. Under full-band an
 | Unrelated, first half | 30,095 → 44 (0.050) | 30,382 → 13,936 (0.050) |
 | Unrelated, second half | 30,095 → 33,060 (0.010) | 30,382 → 30,907 (0.010) |
 
-The report-first distribution was not perfectly invariant. At $\alpha=0.070$, its median raw-logit lifts were +0.44, +0.80, and −0.85 for related full-band, first-half, and second-half targets, and +0.23, +0.65, and −0.70 for the corresponding unrelated targets. These are detectable shifts, but not close calls: across all 1,560 positive-strength report-first trials, the injected token never reached rank 1 in `detected_concept`, matching the zero exact target reports.
+The report-first distribution was not perfectly invariant. At $\alpha=0.070$, its median raw-logit lifts were +0.44, +0.80, and −0.85 for related full-band, first-half, and second-half targets, and +0.23, +0.65, and −0.70 for the corresponding unrelated targets. These are detectable shifts, but not close calls.
 
-The task-first report-field trajectory is also not perfectly monotonic, especially at high first-half strengths, and the second-half panels show no comparable aggregate improvement. Across all task-first `detected_concept` measurements, there were 322 exact target reports but only 136 cases where the particular injected token itself had rank 1. This difference reflects alternate tokenizer forms of the same visible word. The rank is therefore a token-specific diagnostic, not an if-and-only-if test for verbalization.
+The task-first report-field trajectory is also not perfectly monotonic, especially at high first-half strengths, and the second-half panels show no comparable aggregate improvement. Across all task-first `detected_concept` measurements, there were 322 exact target reports but only 136 cases where the particular injected token itself had rank 1. Note that this difference reflects alternate tokenizer forms of the same visible word; the rank is a token-specific diagnostic, not an if-and-only-if test for verbalization.
 
 ## Interpretation
 
@@ -387,11 +385,13 @@ The layer-band result adds a second distinction. First-half injections strongly 
 
 I also highlight that [Appendix A.14 in Anthropic's original paper](https://transformer-circuits.pub/2026/workspace/index.html#app-inclusion-exclusion) also reports functional differences between earlier and later workspace layers. In that experiment, later-layer ablations more selectively inhibited naming the ablated concept, whereas earlier-layer ablations affected related concepts more broadly. Section 4.1 and Figure 28d further suggest that J-vectors occupy a lower-dimensional effective subspace in earlier workspace layers.
 
-One possible synthesis is that an intervention in a lower-dimensional early subspace projects along a broader class of related J-vectors, whereas a later, higher-dimensional representation can be more concept-specific. That could help explain why the first-half interventions here propagated more strongly into both the factual answer and, weakly, the earlier report-field target logit. This remains a mechanistic hypothesis rather than a direct consequence of the current experiment.
+One possible synthesis is that an intervention in a lower-dimensional early subspace projects along a broader class of related J-vectors, whereas a later, higher-dimensional representation can be more concept-specific. That could help explain why the first-half interventions here propagated more strongly into both the factual answer and, weakly, the earlier report-field target logit. However, this remains a mechanistic hypothesis rather than a direct consequence of the current experiment.
 
 Overall, the most defensible interpretation is:
 
 > When the report came first, the intervention sometimes raised the injected concept's output logit, but the typical target remained extremely far from being selected. When the task answer came first, steering placed target-related tokens into the model's own context, after which the injected target became orders of magnitude more competitive in the later report field.
+
+In a future post, I may also expand on the connection between this experiment (and other similar J-space activation patching experiments) and Anthropic researchers' claim that the J-space is representative of a model's functional "conscious acess". I will state for now that, in my intepretation, the results remain consistent with the conscious access claim, although I believe the experiment had the potential to cast significant doubt on that claim had different results arose.
 
 ## Limitations and next experiments
 
