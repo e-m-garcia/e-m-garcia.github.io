@@ -147,7 +147,7 @@ The required key order was:
 
 I used 20 one-word factual questions. Each expected answer and every intervention target had to have a stable single-token representation under the Qwen tokenizer.
 
-For each task, the **related target** was sampled deterministically from a frozen list of incorrect but in-domain alternatives. The **unrelated target** was sampled deterministically from a frozen concept category chosen to be completely separate from the task. The actual intervention direction for all targets were extracted from the [associated Neuronpedia lens repository](neuronpedia-lens).
+For each task, the **related target** was sampled deterministically from a frozen list of incorrect but in-domain alternatives. The **unrelated target** was sampled deterministically from a frozen concept category chosen to be completely separate from the task. The actual intervention direction for all targets were extracted from the [associated Neuronpedia lens repository][neuronpedia-lens].
 
 The complete task and target mapping is in [Appendix A](#appendix-a-complete-task-and-target-mapping).
 
