@@ -26,17 +26,17 @@ Across 1,560 concept-injections in each order, the injected concept appeared in 
 
 In contrast, model reports of intervention occurrence was significantly different between the experimental arms. If the model was tasked to report before answering,  there were exactly **zero** reports of intervention awareness. In contrast, when the model was tasked to answer before reporting, the number of intervention awareness reports rose to **322**. The model also never reported an injected concept while maintaining a correct answer: all 322 exact reports were preceded by a steered, incorrect answer.
 
-For responses where steering in the answer was observed, exact intervention reports were more common for unrelated injected concepts than for related injected concepts.
+For responses where steering in the answer was observed, exact intervention reports were also more common for unrelated injected concepts than for related injected concepts.
 
 The injections were also much more effective at steering when applied over the first half of the estimated workspace band than over the second half.
 
-The retained output logits sharpened this picture. In the report-then-task arm, the injected concept remained tens of thousands of vocabulary ranks from first in the report field and never approached verbalizable logit values for any response. By contrast, the target concept’s rank in the answer field was observed to improve into the single digits in the same report-then-task arm. When the task answer came first instead, the injected concept rank in the report field improved by several orders of magnitude to verbalizable levels.
+The output logits sharpened the emerging picture significantly. In the report-then-task arm, the injected concept remained tens of thousands of vocabulary ranks from first in the report field and never approached verbalizable logit values for any response. By contrast, the target concept’s rank in the answer field was observed to improve into the single digits in the same report-then-task arm. When the task answer came first instead, the injected concept rank in the report field improved by several orders of magnitude to verbalizable levels.
 
-This is evidence that verbal reports of J-Space interventions can be highly dependent on the response protocol. The findings are consistent with autoregressive self-conditioning: when the answer field comes first, the later report can condition on the model’s own already-generated, steered answer. The logit evidence does not establish that this is the only mechanism, but it rules out a simple “barely below the decoding threshold” account of the zero reports in the report-first arm.
+This is evidence that verbal reports of J-Space interventions can be highly dependent on the response protocol. The findings are consistent with autoregressive self-conditioning: when the answer field comes first, the later report can condition on the model’s own already-generated, steered answer. The logit evidence does not firmly establish that this is the only possible mechanism, but it rules out a simple “barely below the decoding threshold” alternative explanation for the zero intervention reports in the report-first arm.
 
 ## Experimental motivation and question
 
-[*Verbalizable Representations Form a Global Workspace in Language Models*][anthropic-paper] from a researchers at Anthropic introduced the notion of an LLM's J-Space via conclusions drawn from a tool, Jacobian Lens. Jacobian Lens, or J-Lens, can probe or modify activations via a map to tokens in the model's vocabulary. I will not discuss all the technical details of J-Lens here. However, I have a piece that motivates J-Lens as the context/position-averaged first-order perturbative term in an LLM's final-layer residual stream from deviations in an earlier layer's residual stream, [which is linked here](https://e-m-garcia.github.io/blog/2026/07/27/understanding-the-origin-of-the-j-space/). Therefore, in a particular scope, there is an argument that J-Lens is the most immediate, mathematically justifiable tool for layer-specific model interpretability, giving it a solid mathematical foundation in addition to the empirical justifications given in *Verbalizable Representations*.
+[*Verbalizable Representations Form a Global Workspace in Language Models*][anthropic-paper] from researchers at Anthropic introduced the notion of an LLM's J-Space via conclusions drawn from, Jacobian Lens, or J-Lens, a tool that can probe or modify activations via a mapping to tokens in the model's vocabulary. I will not discuss all the technical details of J-Lens here. However, I have a piece that motivates J-Lens as the context/position-averaged first-order perturbative term in an LLM's final-layer residual stream from deviations in an earlier layer's residual stream, [which is linked here](https://e-m-garcia.github.io/blog/2026/07/27/understanding-the-origin-of-the-j-space/). Therefore, in a particular scope, there is an argument that J-Lens is the most immediate, mathematically justifiable tool for layer-specific model interpretability, giving it a solid mathematical foundation in addition to the empirical justifications given in *Verbalizable Representations*.
 
 For now, however, all we need to know is that a tensor can be composed from an averaged Jacobian tensor and the final unembedding weights, providing a map between all possible vocabulary tokens $q$ and corresponding residual stream vectors $v$ for any intermediate layer in an LLM $\ell$. This mapping provides residual stream vectors that, at least loosely speaking, point in a direction with increasing evidence for outputting a token $q$. So, if we look at this tensor and restrict our attention to a particular choice of vocabulary token, we can read out the corresponding residual stream vector that correlates with it for any layer. This vector is what Anthropic calls a "J-Lens vector".
 
@@ -62,7 +62,7 @@ However, I was not quite convinced that models could reliably and naturally iden
 
 Furthermore, there were other experiments in the paper that cast further doubt on the ability for a model to naturally recognize a J-vector intervention. For example, in Section 3.3, there are multiple examples of the model giving incorrect answers to factual questions when J-vector swaps were performed. In all these examples, there isn't clear evidence that the model "recognized" something wrong.
 
-So, a natural experimental question arises: under what conditions can an LLM naturally verbalize awareness of a J-vector intervention, if at all? An experiment that is not too broadly scoped should be able to elucidate at least some initial conclusions regarding this question.
+So, a natural question arises: under what conditions can an LLM naturally verbalize awareness of a J-vector intervention, if at all? An experiment that is not too broadly scoped should be able to elucidate at least some initial conclusions regarding this question.
 
 In particular, I could instruct a model to respond to a factual question as accurately as possible (while trying to ignore any injected concept) and to report on whether it detected an injected concept (and identify it). We should expect four response categories. If a J-lens vector is injected while the model reads a factual question, does the model
 
@@ -147,7 +147,7 @@ The required key order was:
 
 I used 20 one-word factual questions. Each expected answer and every intervention target had to have a stable single-token representation under the Qwen tokenizer.
 
-For each task, the **related target** was sampled deterministically from a frozen list of wrong, in-domain alternatives. The **unrelated target** was sampled deterministically from a frozen concept category chosen to be separate from the task. The actual intervention direction for that target was nevertheless computed separately at every injected layer.
+For each task, the **related target** was sampled deterministically from a frozen list of incorrect but in-domain alternatives. The **unrelated target** was sampled deterministically from a frozen concept category chosen to be completely separate from the task. The actual intervention direction for all targets were extracted from the [associated Neuronpedia lens repository](neuronpedia-lens).
 
 The complete task and target mapping is in [Appendix A](#appendix-a-complete-task-and-target-mapping).
 
@@ -188,7 +188,7 @@ $$
 | First half | 24–40 | 17 | 2 | $34\alpha$ |
 | Second half | 41–57 | 17 | 2 | $34\alpha$ |
 
-Doubling the half-band coefficient matches the simple sum of per-layer coefficients. Since these interventions covered half as many layers, I used this multiplier as a heuristic compensation for their downstream effect. Direct comparisons between a half-band arm and the full-band arm should therefore be treated cautiously. The first- and second-half arms are more directly comparable because both used the same strengths and multiplier.
+Doubling the half-band coefficient matches the simple sum of per-layer coefficients. Since these interventions covered half as many layers, I used this multiplier as a heuristic compensation for their downstream effect. Direct comparisons between a half-band arm and the full-band arm should therefore be treated cautiously. The first- and second-half arms are more directly comparable because both used the same injection strengths.
 
 ### Conditions and controls
 
@@ -210,11 +210,9 @@ Control coverage was asymmetric:
 - For the report-then-task full-band run, I collected 40 matched zero-strength controls. They likewise produced no target report, target answer, change report, or malformed response.
 - The half-band runs did not have their own matched random- or zero-direction controls. Figures reuse the corresponding full-band zero baseline for orientation.
 
-The absence of half-band controls is a limitation. The order comparison among positive target-vector interventions remains matched, but broad claims about direction specificity should rely primarily on the controlled full-band arm.
-
 ### Parsing and outcome definitions
 
-Responses were parsed as JSON and required to contain exactly three keys. `task_answer` had to be a non-null scalar; `change_detected` had to be Boolean; and `change_detected: false` required `detected_concept: null`. Rows that failed these rules were marked malformed.
+Responses were parsed as JSON and required to contain exactly three keys. `task_answer` had to be a non-null string; `change_detected` had to be Boolean; and `change_detected: false` required `detected_concept: null`. Rows that failed these rules were marked malformed.
 
 Target and expected-answer matches were case-insensitive, punctuation-normalized exact token matches rather than substring matches. Rows were shuffled and scored without intervention-condition labels before the sealed condition key was joined back in. The scoring itself was deterministic and automated.
 
@@ -229,7 +227,7 @@ I use behavioral labels throughout:
 | Neither | No exact target report or target answer, and no nonspecific change report |
 | Malformed | Output fails the JSON/schema checks |
 
-The original analysis code called exact target reports “verbalized awareness.” I avoid using *awareness* as the primary result label here because the operational measurement is a prompted string report, not a direct measurement of subjective experience or even a context-independent metacognitive faculty.
+The original analysis code called exact target reports “verbalized awareness.” I avoid using *awareness* as the primary result label here because the operational measurement is a prompted string report, not a direct measurement of subjective experience or even a context-independent metacognitive faculty. However, "awareness" is still a useful, although anthropomorphized, shorthand description of the model behavior.
 
 ### Retained field-logit measurements
 
@@ -306,7 +304,7 @@ Another easily overlooked observation is that, conditional on a steered answer, 
 | First half  | 76/139 = 55% | 69/107 = 64% |
 | Second half | 34/34 = 100% | 9/9 = 100%   |
 
-This pattern can also be identified in the prior charts by the slower rise and quantity of "silent steering" responses compared to "awareness + steering" reports for unrelated tasks compared to related tasks.
+This pattern can also be identified in the prior charts by the slower rise and quantity of "silent steering" responses compared to "awareness + steering" reports for unrelated tasks compared to related tasks as $\alpha$ increases.
 
 ### Report then task
 
@@ -379,15 +377,15 @@ The task-first report-field trajectory is also not perfectly monotonic, especial
 
 The cleanest conclusion is that **J-vector reportability in this Qwen protocol is not invariant to when the report is requested**. Response order barely changed how often the target steered the factual answer, but it changed exact target reports from 322 to zero.
 
-The output logits qualify that statement in an important way. Zero report-first outputs do not mean that the earlier report-field distribution was perfectly unchanged. Full-band and first-half interventions produced modest improvements in the injected target's rank, so some target-specific lexical evidence survived into that field. But the data reject a simple “barely below threshold” interpretation: the median target did not rise to rank 2, 10, or even 1,000. It remained tens of thousands of ranks from selection.
+The output logit results specify this statement. Zero report-first outputs do not mean that the earlier report-field distribution was perfectly unchanged. Full-band and first-half interventions produced modest improvements in the injected target's rank, so some target-specific lexical evidence survived into that field. But the data reject a simple “barely below threshold” interpretation: the median target did not rise to rank 2, 10, or even 1,000. It remained tens of thousands of ranks from selection.
 
 The contrast with task-first generation is much larger. The target's rank in `task_answer` followed broadly similar trajectories in both orders. When that answer appeared before `detected_concept`, however, the target became several additional orders of magnitude more competitive in the later report field. Every exact report also co-occurred with a steered answer. Together, these results are consistent with autoregressive self-conditioning: once the target word, or an alternate tokenization of it, enters the model's own output history, later report tokens can attend to direct textual evidence of the intervention's behavioral effect.
 
-On this interpretation, at least some task-first reports may reflect output monitoring, consistency completion, or inference from a surprising answer rather than direct, context-independent access to the injected activation. The experiment does not prove that self-conditioning is the only mechanism. Reversing the field order also changes instruction wording and generation position, and the target word is only one possible lexical signature of conflict, surprise, or generic change detection. Nevertheless, the combined behavioral and logit pattern is substantially more diagnostic than the exact outputs alone.
+On this interpretation, at least some task-first reports may reflect output monitoring, consistency completion, or inference from a surprising answer rather than direct, context-independent access to the injected activation. Moreover, the experiment does not prove that self-conditioning is the only mechanism. Reversing the field order also changes instruction wording and generation position, and the target word is only one possible lexical signature of conflict, surprise, or generic change detection. Nevertheless, the combined behavioral and logit pattern is substantially more diagnostic than the exact outputs alone.
 
-The layer-band result adds a second distinction. First-half injections strongly improved task-answer ranks and, to a much smaller extent, improved earlier report-field ranks. Second-half injections were weaker at steering and often reduced the target's `detected_concept` rank. An averaged-Jacobian perturbation analysis does **not** by itself require an equal-norm injection to have a larger effect at an earlier layer: the downstream maps differ across layers, and nothing requires their relevant gains to grow with remaining depth.
+The layer-band result adds a second distinction. First-half injections strongly improved task-answer ranks and, to a much smaller extent, improved earlier report-field ranks. Second-half injections were weaker at steering and often reduced the target's `detected_concept` rank. Note that an averaged-Jacobian perturbation analysis does **not** by itself require an equal-norm injection to have a larger effect at an earlier layer: the downstream maps differ across layers, and nothing requires their relevant gains to grow with remaining depth.
 
-Anthropic's Appendix A.14 also reports functional differences between earlier and later workspace layers. In that experiment, later-layer ablations more selectively inhibited naming the ablated concept, whereas earlier-layer ablations affected related concepts more broadly. Section 4.1 and Figure 28d further suggest that J-vectors occupy a lower-dimensional effective subspace in earlier workspace layers.
+I also highlight that [Appendix A.14 in Anthropic's original paper](https://transformer-circuits.pub/2026/workspace/index.html#app-inclusion-exclusion) also reports functional differences between earlier and later workspace layers. In that experiment, later-layer ablations more selectively inhibited naming the ablated concept, whereas earlier-layer ablations affected related concepts more broadly. Section 4.1 and Figure 28d further suggest that J-vectors occupy a lower-dimensional effective subspace in earlier workspace layers.
 
 One possible synthesis is that an intervention in a lower-dimensional early subspace projects along a broader class of related J-vectors, whereas a later, higher-dimensional representation can be more concept-specific. That could help explain why the first-half interventions here propagated more strongly into both the factual answer and, weakly, the earlier report-field target logit. This remains a mechanistic hypothesis rather than a direct consequence of the current experiment.
 
@@ -411,6 +409,7 @@ The most important limitations are:
 
 The most informative immediate follow-ups could include:
 
+- Reading J-lens logits in addition to the output logits initially explored here, particularly at the final workspace layer
 - Rerunning both orders with instructions identical except for an externally enforced output schema;
 - Including a delayed-answer or hidden-answer condition that prevents the model from reading its own answer token;
 - Preregistering a held-out set of target concepts and factual questions;
@@ -494,4 +493,4 @@ All cells below aggregate the 13 positive strengths and contain counts out of 26
 [anthropic-paper]: https://transformer-circuits.pub/2026/workspace/index.html
 [anthropic-code]: https://github.com/anthropics/jacobian-lens
 [neuronpedia]: https://www.neuronpedia.org/
-[neuronpedia-lens]: https://huggingface.co/neuronpedia/jacobian-lens/blob/b62c39069a0740aebcc70462231b68612cae367f/qwen3.6-27b/jlens/Salesforce-wikitext/Qwen3.6-27B_jacobian_lens_n1000.pt
+[neuronpedia-lens]: https://huggingface.co/neuronpedia/jacobian-lens/tree/b62c39069a0740aebcc70462231b68612cae367f/qwen3.6-27b
