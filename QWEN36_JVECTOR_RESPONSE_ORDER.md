@@ -409,7 +409,7 @@ The most important limitations are:
 
 The most informative immediate follow-ups could include:
 
-- Reading J-lens logits in addition to the output logits initially explored here, particularly at the final workspace layer
+- Reading J-lens logits in addition to the output logits initially explored here, particularly at the final workspace layer;
 - Rerunning both orders with instructions identical except for an externally enforced output schema;
 - Including a delayed-answer or hidden-answer condition that prevents the model from reading its own answer token;
 - Preregistering a held-out set of target concepts and factual questions;
