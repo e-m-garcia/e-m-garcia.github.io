@@ -34,7 +34,7 @@ The output logits sharpened the emerging picture significantly. In the report-th
 
 This is evidence that verbal reports of J-Space interventions can be highly dependent on the response protocol. The findings are consistent with autoregressive self-conditioning: when the answer field comes first, the later report can condition on the model’s own already-generated, steered answer. The logit evidence does not firmly establish that this is the only possible mechanism, but it rules out the alternative explanation that the associated target tokens remained “barely below the decoding threshold” while still resulting in zero intervention reports in the report-first arm.
 
-In contrast, without tokens that contain information indicative of an abnormality, the model cannot extract and verbalize information about J-space abnormalities in its own activations, and remains "blissfully unaware" of interventions at all strengths.
+In contrast, without tokens indicative of an abnormality, the model cannot extract and verbalize information about J-space abnormalities in its own activations, and remains "blissfully unaware" of interventions at all strengths.
 
 ## Experimental motivation and question
 
