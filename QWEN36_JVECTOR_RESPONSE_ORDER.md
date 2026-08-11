@@ -1,6 +1,6 @@
 ---
 layout: research
-title: "When (and when not) LLMs verbalize awareness of J-Space concept injections - Initial Results"
+title: "When (and when not) LLMs can verbalize awareness of J-Space concept injections - Initial results"
 browser_title: "When (and when not) LLMs verbalize awareness of J-Space concept injections - Initial Results"
 description: "A controlled activation-intervention study finds that Qwen’s exact reports of injected concepts depend sharply on whether reflection comes before or after its task answer."
 date: 2026-07-24
