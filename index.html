@@ -4,6 +4,8 @@ title: Home
 description: Ethan Garcia — independent AI interpretability researcher.
 ---
 
+{% assign j_lens_awareness = site.pages | where: "url", "/research/j-lens-awareness/" | first %}
+
 <section class="hero section">
   <div class="hero__copy">
     <h1>I’m Ethan Garcia.</h1>
@@ -50,7 +52,7 @@ description: Ethan Garcia — independent AI interpretability researcher.
         <span class="tag">Mechanistic interpretability</span>
         <time datetime="2026-07-24">July 2026</time>
       </div>
-      <h3><a href="{{ '/research/j-lens-awareness/' | relative_url }}">When (and when not) LLMs verbalize awareness of J-Space concept injections - Initial Results</a></h3>
+      <h3><a href="{{ '/research/j-lens-awareness/' | relative_url }}">{{ j_lens_awareness.title }}</a></h3>
       <p>
         An intervention study in Qwen 3.6–27B exploring the conditions for verbalized awareness of concept injections in its J-Space.
       </p>

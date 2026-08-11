@@ -5,6 +5,8 @@ description: Research notes and experimental results in AI interpretability.
 permalink: /research/
 ---
 
+{% assign j_lens_awareness = site.pages | where: "url", "/research/j-lens-awareness/" | first %}
+
 <section class="section">
   <div class="research-list">
     <article class="research-item">
@@ -14,7 +16,7 @@ permalink: /research/
           <span class="tag">Mechanistic interpretability</span>
           <time datetime="2026-07-24">July 2026</time>
         </div>
-        <h2><a href="{{ '/research/j-lens-awareness/' | relative_url }}">When (and when not) LLMs verbalize awareness of J-Space concept injections - Initial Results</a></h2>
+        <h2><a href="{{ '/research/j-lens-awareness/' | relative_url }}">{{ j_lens_awareness.title }}</a></h2>
         <p>
           An intervention study in Qwen 3.6–27B exploring the conditions for verbalized awareness of concept injections in its J-Space.
         </p>
